@@ -94,8 +94,25 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
 
-    queue = util.Queue()
-    return generalSearch(problem, queue)
+    Frontier = util.Queue()
+    Visited = []
+    Frontier.push( (problem.getStartState(), []) )
+    #print 'Start',problem.getStartState()
+    #Visited.append( problem.getStartState() )
+
+    while Frontier.isEmpty() == 0:
+        state, actions = Frontier.pop()
+
+        for next in problem.getSuccessors(state):
+            n_state = next[0]
+            n_direction = next[1]
+            if n_state not in Visited:
+                if problem.isGoalState(n_state):
+                    #print 'Find Goal'
+                    return actions + [n_direction]
+                Frontier.push( (n_state, actions + [n_direction]) )
+                Visited.append( n_state )
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -118,7 +135,7 @@ def generalSearch(problem, data_structure):
     visited = []
     # dodaje stanje (triplet): [(x,y), akcija(N,S,E,W,Stop), cena]
     data_structure.push([(problem.getStartState(), "Stop", 0)])
-    print ("Start: ", problem.getStartState())
+    # print ("Start: ", problem.getStartState())
 
     while not data_structure.isEmpty():
         ''' svaki element iz path je stanje, koje je triplet:
@@ -128,8 +145,8 @@ def generalSearch(problem, data_structure):
         # od poslednjeg u listi dobavlja (x, y)
         current_state = path[-1][0]
         # od poslednjeg u listi dobavlja akciju (N, S, E, W, Stop)
-        print ("Going direction ", path[-1][1])
-        print ("State is ", current_state)
+        # print ("Going direction ", path[-1][1])
+        # print ("State is ", current_state)
 
         if problem.isGoalState(current_state):
             ''' uzima se akcija (index 1 u tripletu) iz svakog elementa liste
